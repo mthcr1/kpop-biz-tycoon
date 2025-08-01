@@ -8,33 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* K-Pop Empire Color Palette */
+    --background: 230 15% 9%;
+    --foreground: 280 5% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 230 15% 12%;
+    --card-foreground: 280 5% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 230 15% 12%;
+    --popover-foreground: 280 5% 95%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* K-Pop Primary - Electric Purple */
+    --primary: 285 100% 65%;
+    --primary-foreground: 230 15% 9%;
+    --primary-glow: 285 100% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* K-Pop Secondary - Neon Pink */
+    --secondary: 320 100% 70%;
+    --secondary-foreground: 230 15% 9%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted tones */
+    --muted: 230 15% 18%;
+    --muted-foreground: 280 5% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* K-Pop Accent - Electric Blue */
+    --accent: 200 100% 70%;
+    --accent-foreground: 230 15% 9%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 85% 65%;
+    --destructive-foreground: 280 5% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 230 15% 20%;
+    --input: 230 15% 18%;
+    --ring: 285 100% 65%;
+
+    /* K-Pop Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(285 100% 65%), hsl(320 100% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(200 100% 70%), hsl(285 100% 65%));
+    --gradient-glow: linear-gradient(135deg, hsl(285 100% 75%), hsl(320 100% 80%));
+    --gradient-background: linear-gradient(135deg, hsl(230 15% 9%), hsl(230 20% 12%));
+    
+    /* Glow effects */
+    --glow-primary: 0 0 40px hsl(285 100% 65% / 0.3);
+    --glow-secondary: 0 0 40px hsl(320 100% 70% / 0.3);
+    --glow-accent: 0 0 40px hsl(200 100% 70% / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --radius: 0.5rem;
 
