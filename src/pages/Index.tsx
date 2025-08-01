@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { Dashboard } from "@/components/Dashboard";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 
 const Index = () => {
   const [gameStarted, setGameStarted] = useState(false);
@@ -10,16 +12,21 @@ const Index = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative min-h-screen">
       <HeroSection />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center">
-          <button 
+      
+      {/* Fixed overlay button for starting game */}
+      <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+        <div className="pointer-events-auto">
+          <Button 
             onClick={() => setGameStarted(true)}
-            className="opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gradient-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg shadow-glow-primary hover:shadow-glow-secondary transform hover:scale-105 transition-all duration-300"
+            variant="kpop" 
+            size="lg"
+            className="text-xl px-12 py-6 shadow-2xl hover:shadow-glow-primary transform hover:scale-110 transition-all duration-300 animate-glow-pulse"
           >
-            Entrar no Jogo
-          </button>
+            <Play className="mr-3 w-6 h-6" />
+            INICIAR JOGO
+          </Button>
         </div>
       </div>
     </div>

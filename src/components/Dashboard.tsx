@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   Building2, 
   Users, 
@@ -13,81 +16,204 @@ import {
   Award,
   Calendar,
   Globe,
-  Headphones
+  Headphones,
+  Plus,
+  Target,
+  Mic,
+  Heart,
+  Eye,
+  Zap,
+  Trophy
 } from "lucide-react";
+import { useState } from "react";
 
 export const Dashboard = () => {
+  const [selectedTrainee, setSelectedTrainee] = useState<string | null>(null);
+  const [newTraineeName, setNewTraineeName] = useState("");
+  const [companyMoney, setCompanyMoney] = useState(15200000000);
+  
+  const trainees = [
+    { 
+      id: 1, 
+      name: "Kim Min-ji", 
+      age: 17, 
+      vocal: 87, 
+      dance: 72, 
+      rap: 45, 
+      visual: 92, 
+      variety: 68,
+      stress: 25,
+      potential: "A+",
+      monthsTraining: 18
+    },
+    { 
+      id: 2, 
+      name: "Park Jae-hyun", 
+      age: 19, 
+      vocal: 65, 
+      dance: 95, 
+      rap: 88, 
+      visual: 78, 
+      variety: 82,
+      stress: 40,
+      potential: "S",
+      monthsTraining: 24
+    },
+    { 
+      id: 3, 
+      name: "Lee Soo-young", 
+      age: 16, 
+      vocal: 78, 
+      dance: 68, 
+      rap: 92, 
+      visual: 85, 
+      variety: 55,
+      stress: 15,
+      potential: "A",
+      monthsTraining: 12
+    }
+  ];
+
+  const groups = [
+    { 
+      id: 1, 
+      name: "NOVA", 
+      type: "Girl Group", 
+      members: 5, 
+      status: "Ativo", 
+      nextComeback: 15,
+      popularity: 89,
+      revenue: 2800000000
+    },
+    { 
+      id: 2, 
+      name: "ECLIPSE", 
+      type: "Boy Group", 
+      members: 7, 
+      status: "Em Produção", 
+      nextComeback: 45,
+      popularity: 76,
+      revenue: 1900000000
+    }
+  ];
+
+  const handleTraineeAction = (traineeId: number, action: string) => {
+    console.log(`Ação ${action} para trainee ${traineeId}`);
+    // Implementar lógica de treinamento
+  };
+
+  const formatMoney = (amount: number) => {
+    return `₩${(amount / 1000000000).toFixed(1)}B`;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-background p-6">
+    <div className="min-h-screen bg-gradient-background p-4 md:p-6">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
               K-Pop Empire
             </h1>
             <p className="text-muted-foreground">
               CEO Dashboard - StarLight Entertainment
             </p>
+            <p className="text-sm text-primary font-semibold">
+              Fundos: {formatMoney(companyMoney)}
+            </p>
           </div>
-          <div className="flex gap-4">
-            <Button variant="kpop" size="lg">
-              <Calendar className="mr-2" />
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <Button variant="kpop" size="lg" className="w-full sm:w-auto">
+              <Calendar className="mr-2 w-4 h-4" />
               Novo Comeback
             </Button>
-            <Button variant="neon" size="lg">
-              <Users className="mr-2" />
-              Recrutar Trainee
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="neon" size="lg" className="w-full sm:w-auto">
+                  <Users className="mr-2 w-4 h-4" />
+                  Recrutar Trainee
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border">
+                <DialogHeader>
+                  <DialogTitle className="text-foreground">Recrutar Novo Trainee</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="trainee-name" className="text-foreground">Nome do Trainee</Label>
+                    <Input 
+                      id="trainee-name"
+                      value={newTraineeName}
+                      onChange={(e) => setNewTraineeName(e.target.value)}
+                      placeholder="Digite o nome..."
+                      className="bg-input border-border text-foreground"
+                    />
+                  </div>
+                  <Button 
+                    variant="kpop" 
+                    className="w-full"
+                    onClick={() => {
+                      if (newTraineeName.trim()) {
+                        console.log(`Recrutando: ${newTraineeName}`);
+                        setNewTraineeName("");
+                        setCompanyMoney(prev => prev - 50000000);
+                      }
+                    }}
+                  >
+                    Recrutar por ₩50M
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         
         {/* Company Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="p-4 bg-card border-border hover:shadow-glow-primary transition-all duration-300">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <Card className="p-4 bg-card/90 border-border hover:shadow-glow-primary transition-all duration-300 cursor-pointer">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-lg">
-                <Building2 className="w-5 h-5 text-primary" />
+                <Building2 className="w-4 h-4 md:w-5 md:h-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Valor da Empresa</p>
-                <p className="text-xl font-bold text-foreground">₩15.2B</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Valor da Empresa</p>
+                <p className="text-lg md:text-xl font-bold text-foreground">₩15.2B</p>
               </div>
             </div>
           </Card>
           
-          <Card className="p-4 bg-card border-border hover:shadow-glow-secondary transition-all duration-300">
+          <Card className="p-4 bg-card/90 border-border hover:shadow-glow-secondary transition-all duration-300 cursor-pointer">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-secondary/20 rounded-lg">
-                <Users className="w-5 h-5 text-secondary" />
+                <Users className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Artistas Ativos</p>
-                <p className="text-xl font-bold text-foreground">24</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Artistas Ativos</p>
+                <p className="text-lg md:text-xl font-bold text-foreground">24</p>
               </div>
             </div>
           </Card>
           
-          <Card className="p-4 bg-card border-border hover:shadow-glow-accent transition-all duration-300">
+          <Card className="p-4 bg-card/90 border-border hover:shadow-glow-accent transition-all duration-300 cursor-pointer">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-accent/20 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-accent" />
+                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Receita Mensal</p>
-                <p className="text-xl font-bold text-foreground">₩2.8B</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Receita Mensal</p>
+                <p className="text-lg md:text-xl font-bold text-foreground">₩2.8B</p>
               </div>
             </div>
           </Card>
           
-          <Card className="p-4 bg-card border-border hover:shadow-glow-primary transition-all duration-300">
+          <Card className="p-4 bg-card/90 border-border hover:shadow-glow-primary transition-all duration-300 cursor-pointer">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-lg">
-                <Star className="w-5 h-5 text-primary" />
+                <Star className="w-4 h-4 md:w-5 md:h-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Reputação</p>
-                <p className="text-xl font-bold text-foreground">A+</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Reputação</p>
+                <p className="text-lg md:text-xl font-bold text-foreground">A+</p>
               </div>
             </div>
           </Card>
@@ -96,141 +222,253 @@ export const Dashboard = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-card border-border">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="artists">Artistas</TabsTrigger>
-          <TabsTrigger value="trainees">Trainees</TabsTrigger>
-          <TabsTrigger value="production">Produção</TabsTrigger>
-          <TabsTrigger value="finances">Finanças</TabsTrigger>
+        <TabsList className="bg-card/90 border-border grid grid-cols-3 md:grid-cols-5 w-full">
+          <TabsTrigger value="overview" className="text-xs md:text-sm">Visão Geral</TabsTrigger>
+          <TabsTrigger value="artists" className="text-xs md:text-sm">Artistas</TabsTrigger>
+          <TabsTrigger value="trainees" className="text-xs md:text-sm">Trainees</TabsTrigger>
+          <TabsTrigger value="production" className="text-xs md:text-sm">Produção</TabsTrigger>
+          <TabsTrigger value="finances" className="text-xs md:text-sm">Finanças</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Current Groups */}
-            <Card className="p-6 col-span-2 bg-card border-border">
+            <Card className="p-6 col-span-2 bg-card/90 border-border">
               <h3 className="text-xl font-semibold mb-4 text-foreground">Grupos Ativos</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
-                      <Music className="w-6 h-6 text-primary-foreground" />
+                {groups.map((group) => (
+                  <div key={group.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
+                        <Music className="w-6 h-6 text-primary-foreground" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground">{group.name}</h4>
+                        <p className="text-sm text-muted-foreground">{group.type} • {group.members} membros</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Star className="w-3 h-3 text-yellow-500" />
+                          <span className="text-xs text-muted-foreground">Popularidade: {group.popularity}%</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground">NOVA</h4>
-                      <p className="text-sm text-muted-foreground">Girl Group • 5 membros</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <Badge className="bg-primary text-primary-foreground mb-2">Ativo</Badge>
-                    <p className="text-sm text-muted-foreground">Próximo comeback: 15 dias</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-secondary rounded-lg flex items-center justify-center">
-                      <Headphones className="w-6 h-6 text-secondary-foreground" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground">ECLIPSE</h4>
-                      <p className="text-sm text-muted-foreground">Boy Group • 7 membros</p>
+                    <div className="text-right">
+                      <Badge className={group.status === "Ativo" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}>{group.status}</Badge>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {group.status === "Ativo" ? `Próximo comeback: ${group.nextComeback} dias` : "Álbum em gravação"}
+                      </p>
+                      <p className="text-xs text-primary font-semibold">{formatMoney(group.revenue)}/mês</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <Badge className="bg-secondary text-secondary-foreground mb-2">Em Produção</Badge>
-                    <p className="text-sm text-muted-foreground">Álbum em gravação</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </Card>
 
             {/* Recent Achievements */}
-            <Card className="p-6 bg-card border-border">
+            <Card className="p-6 bg-card/90 border-border">
               <h3 className="text-xl font-semibold mb-4 text-foreground">Conquistas Recentes</h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-lg">
-                  <Award className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors">
+                  <Trophy className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-sm font-medium text-foreground">NOVA #1 no Melon</p>
-                    <p className="text-xs text-muted-foreground">2 dias atrás</p>
+                    <p className="text-xs text-muted-foreground">2 dias atrás • +₩500M</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-3 p-3 bg-secondary/10 rounded-lg">
+                <div className="flex items-center gap-3 p-3 bg-secondary/10 rounded-lg cursor-pointer hover:bg-secondary/20 transition-colors">
                   <Globe className="w-5 h-5 text-secondary" />
                   <div>
                     <p className="text-sm font-medium text-foreground">ECLIPSE Billboard Hot 100</p>
-                    <p className="text-xs text-muted-foreground">1 semana atrás</p>
+                    <p className="text-xs text-muted-foreground">1 semana atrás • +₩1.2B</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-3 p-3 bg-accent/10 rounded-lg">
+                <div className="flex items-center gap-3 p-3 bg-accent/10 rounded-lg cursor-pointer hover:bg-accent/20 transition-colors">
                   <DollarSign className="w-5 h-5 text-accent" />
                   <div>
-                    <p className="text-sm font-medium text-foreground">Contrato CF ₩500M</p>
-                    <p className="text-xs text-muted-foreground">3 dias atrás</p>
+                    <p className="text-sm font-medium text-foreground">Contrato CF Samsung</p>
+                    <p className="text-xs text-muted-foreground">3 dias atrás • +₩800M</p>
                   </div>
                 </div>
               </div>
             </Card>
           </div>
+        </TabsContent>
 
-          {/* Training Progress */}
-          <Card className="p-6 bg-card border-border">
-            <h3 className="text-xl font-semibold mb-4 text-foreground">Progresso dos Trainees</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-foreground">Kim Min-ji</span>
-                  <span className="text-sm text-muted-foreground">Vocal: 87%</span>
-                </div>
-                <Progress value={87} className="h-2" />
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-foreground">Park Jae-hyun</span>
-                  <span className="text-sm text-muted-foreground">Dança: 92%</span>
-                </div>
-                <Progress value={92} className="h-2" />
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-foreground">Lee Soo-young</span>
-                  <span className="text-sm text-muted-foreground">Rap: 78%</span>
-                </div>
-                <Progress value={78} className="h-2" />
-              </div>
+        <TabsContent value="trainees" className="space-y-6">
+          <Card className="p-6 bg-card/90 border-border">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-foreground">Sistema de Trainees</h3>
+              <Button variant="kpop" size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Trainee
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {trainees.map((trainee) => (
+                <Card key={trainee.id} className="p-4 bg-muted/30 border-border hover:shadow-glow-primary transition-all duration-300 cursor-pointer">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-foreground">{trainee.name}</h4>
+                        <p className="text-sm text-muted-foreground">{trainee.age} anos • {trainee.monthsTraining} meses</p>
+                      </div>
+                      <Badge className="bg-primary/20 text-primary border-primary/30">
+                        {trainee.potential}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Mic className="w-3 h-3 text-primary" />
+                          <span className="text-xs text-foreground">Vocal</span>
+                        </div>
+                        <span className="text-xs font-semibold text-foreground">{trainee.vocal}%</span>
+                      </div>
+                      <Progress value={trainee.vocal} className="h-1" />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Zap className="w-3 h-3 text-secondary" />
+                          <span className="text-xs text-foreground">Dança</span>
+                        </div>
+                        <span className="text-xs font-semibold text-foreground">{trainee.dance}%</span>
+                      </div>
+                      <Progress value={trainee.dance} className="h-1" />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Music className="w-3 h-3 text-accent" />
+                          <span className="text-xs text-foreground">Rap</span>
+                        </div>
+                        <span className="text-xs font-semibold text-foreground">{trainee.rap}%</span>
+                      </div>
+                      <Progress value={trainee.rap} className="h-1" />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-3 h-3 text-primary" />
+                          <span className="text-xs text-foreground">Visual</span>
+                        </div>
+                        <span className="text-xs font-semibold text-foreground">{trainee.visual}%</span>
+                      </div>
+                      <Progress value={trainee.visual} className="h-1" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                      <div className="flex items-center gap-1">
+                        <Heart className={`w-3 h-3 ${trainee.stress < 30 ? 'text-green-500' : trainee.stress < 60 ? 'text-yellow-500' : 'text-red-500'}`} />
+                        <span className="text-xs text-muted-foreground">Stress: {trainee.stress}%</span>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-xs"
+                        onClick={() => handleTraineeAction(trainee.id, 'treinar')}
+                      >
+                        Treinar
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
           </Card>
         </TabsContent>
 
         <TabsContent value="artists">
-          <Card className="p-6 bg-card border-border">
+          <Card className="p-6 bg-card/90 border-border">
             <h3 className="text-xl font-semibold mb-4 text-foreground">Gestão de Artistas</h3>
-            <p className="text-muted-foreground">Sistema de gestão de artistas em desenvolvimento...</p>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="trainees">
-          <Card className="p-6 bg-card border-border">
-            <h3 className="text-xl font-semibold mb-4 text-foreground">Sistema de Trainees</h3>
-            <p className="text-muted-foreground">Sistema de recrutamento e treinamento em desenvolvimento...</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {groups.map((group) => (
+                <Card key={group.id} className="p-4 bg-muted/30 border-border hover:shadow-glow-secondary transition-all duration-300 cursor-pointer">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-lg font-semibold text-foreground">{group.name}</h4>
+                      <Badge className={group.status === "Ativo" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}>
+                        {group.status}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Popularidade</span>
+                        <span className="text-sm font-semibold text-foreground">{group.popularity}%</span>
+                      </div>
+                      <Progress value={group.popularity} className="h-2" />
+                      
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Receita Mensal</span>
+                        <span className="text-sm font-semibold text-primary">{formatMoney(group.revenue)}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button variant="kpop" size="sm" className="flex-1">
+                        Novo Single
+                      </Button>
+                      <Button variant="outline" size="sm" className="flex-1">
+                        Fanmeeting
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </Card>
         </TabsContent>
 
         <TabsContent value="production">
-          <Card className="p-6 bg-card border-border">
+          <Card className="p-6 bg-card/90 border-border">
             <h3 className="text-xl font-semibold mb-4 text-foreground">Produção Musical</h3>
-            <p className="text-muted-foreground">Sistema de produção musical em desenvolvimento...</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Button variant="kpop" className="h-24 flex-col">
+                <Music className="w-8 h-8 mb-2" />
+                Produzir Single
+              </Button>
+              <Button variant="neon" className="h-24 flex-col">
+                <Award className="w-8 h-8 mb-2" />
+                Álbum Completo
+              </Button>
+              <Button variant="secondary" className="h-24 flex-col">
+                <Globe className="w-8 h-8 mb-2" />
+                Colaboração
+              </Button>
+            </div>
           </Card>
         </TabsContent>
 
         <TabsContent value="finances">
-          <Card className="p-6 bg-card border-border">
+          <Card className="p-6 bg-card/90 border-border">
             <h3 className="text-xl font-semibold mb-4 text-foreground">Gestão Financeira</h3>
-            <p className="text-muted-foreground">Sistema financeiro avançado em desenvolvimento...</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="p-4 bg-green-500/10 border-green-500/20">
+                <div className="text-center">
+                  <p className="text-sm text-green-400">Receita Total</p>
+                  <p className="text-xl font-bold text-green-400">₩4.7B</p>
+                </div>
+              </Card>
+              <Card className="p-4 bg-red-500/10 border-red-500/20">
+                <div className="text-center">
+                  <p className="text-sm text-red-400">Despesas</p>
+                  <p className="text-xl font-bold text-red-400">₩1.9B</p>
+                </div>
+              </Card>
+              <Card className="p-4 bg-blue-500/10 border-blue-500/20">
+                <div className="text-center">
+                  <p className="text-sm text-blue-400">Lucro Líquido</p>
+                  <p className="text-xl font-bold text-blue-400">₩2.8B</p>
+                </div>
+              </Card>
+              <Card className="p-4 bg-purple-500/10 border-purple-500/20">
+                <div className="text-center">
+                  <p className="text-sm text-purple-400">Investimentos</p>
+                  <p className="text-xl font-bold text-purple-400">₩800M</p>
+                </div>
+              </Card>
+            </div>
           </Card>
         </TabsContent>
       </Tabs>
