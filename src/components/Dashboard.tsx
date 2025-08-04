@@ -16,94 +16,36 @@ import {
   Award,
   Calendar,
   Globe,
-  Headphones,
-  Plus,
-  Target,
-  Mic,
-  Heart,
-  Eye,
-  Zap,
   Trophy
 } from "lucide-react";
 import { useState } from "react";
+import { useGameState } from "@/hooks/useGameState";
+import { TraineeManagement } from "@/components/TraineeManagement";
+import { ProductionSystem } from "@/components/ProductionSystem";
+import { EventsSystem } from "@/components/EventsSystem";
 
 export const Dashboard = () => {
-  const [selectedTrainee, setSelectedTrainee] = useState<string | null>(null);
   const [newTraineeName, setNewTraineeName] = useState("");
-  const [companyMoney, setCompanyMoney] = useState(15200000000);
   
-  const trainees = [
-    { 
-      id: 1, 
-      name: "Kim Min-ji", 
-      age: 17, 
-      vocal: 87, 
-      dance: 72, 
-      rap: 45, 
-      visual: 92, 
-      variety: 68,
-      stress: 25,
-      potential: "A+",
-      monthsTraining: 18
-    },
-    { 
-      id: 2, 
-      name: "Park Jae-hyun", 
-      age: 19, 
-      vocal: 65, 
-      dance: 95, 
-      rap: 88, 
-      visual: 78, 
-      variety: 82,
-      stress: 40,
-      potential: "S",
-      monthsTraining: 24
-    },
-    { 
-      id: 3, 
-      name: "Lee Soo-young", 
-      age: 16, 
-      vocal: 78, 
-      dance: 68, 
-      rap: 92, 
-      visual: 85, 
-      variety: 55,
-      stress: 15,
-      potential: "A",
-      monthsTraining: 12
+  const {
+    companyMoney,
+    trainees,
+    groups,
+    formatMoney,
+    trainTrainee,
+    restTrainee,
+    recruitTrainee,
+    produceContent,
+    handleEvent
+  } = useGameState();
+
+  const handleRecruitment = () => {
+    if (newTraineeName.trim()) {
+      const success = recruitTrainee(newTraineeName);
+      if (success) {
+        setNewTraineeName("");
+      }
     }
-  ];
-
-  const groups = [
-    { 
-      id: 1, 
-      name: "NOVA", 
-      type: "Girl Group", 
-      members: 5, 
-      status: "Ativo", 
-      nextComeback: 15,
-      popularity: 89,
-      revenue: 2800000000
-    },
-    { 
-      id: 2, 
-      name: "ECLIPSE", 
-      type: "Boy Group", 
-      members: 7, 
-      status: "Em Produção", 
-      nextComeback: 45,
-      popularity: 76,
-      revenue: 1900000000
-    }
-  ];
-
-  const handleTraineeAction = (traineeId: number, action: string) => {
-    console.log(`Ação ${action} para trainee ${traineeId}`);
-    // Implementar lógica de treinamento
-  };
-
-  const formatMoney = (amount: number) => {
-    return `₩${(amount / 1000000000).toFixed(1)}B`;
   };
 
   return (
@@ -152,13 +94,7 @@ export const Dashboard = () => {
                   <Button 
                     variant="kpop" 
                     className="w-full"
-                    onClick={() => {
-                      if (newTraineeName.trim()) {
-                        console.log(`Recrutando: ${newTraineeName}`);
-                        setNewTraineeName("");
-                        setCompanyMoney(prev => prev - 50000000);
-                      }
-                    }}
+                    onClick={handleRecruitment}
                   >
                     Recrutar por ₩50M
                   </Button>
@@ -222,11 +158,12 @@ export const Dashboard = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-card/90 border-border grid grid-cols-3 md:grid-cols-5 w-full">
+        <TabsList className="bg-card/90 border-border grid grid-cols-3 md:grid-cols-6 w-full">
           <TabsTrigger value="overview" className="text-xs md:text-sm">Visão Geral</TabsTrigger>
           <TabsTrigger value="artists" className="text-xs md:text-sm">Artistas</TabsTrigger>
           <TabsTrigger value="trainees" className="text-xs md:text-sm">Trainees</TabsTrigger>
           <TabsTrigger value="production" className="text-xs md:text-sm">Produção</TabsTrigger>
+          <TabsTrigger value="events" className="text-xs md:text-sm">Eventos</TabsTrigger>
           <TabsTrigger value="finances" className="text-xs md:text-sm">Finanças</TabsTrigger>
         </TabsList>
 
@@ -296,86 +233,11 @@ export const Dashboard = () => {
         </TabsContent>
 
         <TabsContent value="trainees" className="space-y-6">
-          <Card className="p-6 bg-card/90 border-border">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-foreground">Sistema de Trainees</h3>
-              <Button variant="kpop" size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Novo Trainee
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {trainees.map((trainee) => (
-                <Card key={trainee.id} className="p-4 bg-muted/30 border-border hover:shadow-glow-primary transition-all duration-300 cursor-pointer">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold text-foreground">{trainee.name}</h4>
-                        <p className="text-sm text-muted-foreground">{trainee.age} anos • {trainee.monthsTraining} meses</p>
-                      </div>
-                      <Badge className="bg-primary/20 text-primary border-primary/30">
-                        {trainee.potential}
-                      </Badge>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Mic className="w-3 h-3 text-primary" />
-                          <span className="text-xs text-foreground">Vocal</span>
-                        </div>
-                        <span className="text-xs font-semibold text-foreground">{trainee.vocal}%</span>
-                      </div>
-                      <Progress value={trainee.vocal} className="h-1" />
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Zap className="w-3 h-3 text-secondary" />
-                          <span className="text-xs text-foreground">Dança</span>
-                        </div>
-                        <span className="text-xs font-semibold text-foreground">{trainee.dance}%</span>
-                      </div>
-                      <Progress value={trainee.dance} className="h-1" />
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Music className="w-3 h-3 text-accent" />
-                          <span className="text-xs text-foreground">Rap</span>
-                        </div>
-                        <span className="text-xs font-semibold text-foreground">{trainee.rap}%</span>
-                      </div>
-                      <Progress value={trainee.rap} className="h-1" />
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Eye className="w-3 h-3 text-primary" />
-                          <span className="text-xs text-foreground">Visual</span>
-                        </div>
-                        <span className="text-xs font-semibold text-foreground">{trainee.visual}%</span>
-                      </div>
-                      <Progress value={trainee.visual} className="h-1" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                      <div className="flex items-center gap-1">
-                        <Heart className={`w-3 h-3 ${trainee.stress < 30 ? 'text-green-500' : trainee.stress < 60 ? 'text-yellow-500' : 'text-red-500'}`} />
-                        <span className="text-xs text-muted-foreground">Stress: {trainee.stress}%</span>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-xs"
-                        onClick={() => handleTraineeAction(trainee.id, 'treinar')}
-                      >
-                        Treinar
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </Card>
+          <TraineeManagement 
+            trainees={trainees}
+            onTrainSkill={trainTrainee}
+            onRestTrainee={restTrainee}
+          />
         </TabsContent>
 
         <TabsContent value="artists">
@@ -421,23 +283,20 @@ export const Dashboard = () => {
         </TabsContent>
 
         <TabsContent value="production">
-          <Card className="p-6 bg-card/90 border-border">
-            <h3 className="text-xl font-semibold mb-4 text-foreground">Produção Musical</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="kpop" className="h-24 flex-col">
-                <Music className="w-8 h-8 mb-2" />
-                Produzir Single
-              </Button>
-              <Button variant="neon" className="h-24 flex-col">
-                <Award className="w-8 h-8 mb-2" />
-                Álbum Completo
-              </Button>
-              <Button variant="secondary" className="h-24 flex-col">
-                <Globe className="w-8 h-8 mb-2" />
-                Colaboração
-              </Button>
-            </div>
-          </Card>
+          <ProductionSystem 
+            groups={groups}
+            formatMoney={formatMoney}
+            onProduceContent={produceContent}
+          />
+        </TabsContent>
+
+        <TabsContent value="events">
+          <EventsSystem 
+            companyMoney={companyMoney}
+            groups={groups}
+            trainees={trainees}
+            onEventAction={handleEvent}
+          />
         </TabsContent>
 
         <TabsContent value="finances">
