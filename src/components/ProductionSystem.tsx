@@ -7,9 +7,9 @@ import { Group } from "@/hooks/useGameState";
 import { useState } from "react";
 
 interface ProductionSystemProps {
-  groups: Group[];
+  groups: any[];
   formatMoney: (amount: number) => string;
-  onProduceContent: (type: string, groupId: number) => void;
+  onProduceContent: (groupId: number, type: 'single' | 'mini' | 'full', cost: number) => { success: boolean; cost: number };
 }
 
 export const ProductionSystem = ({ 
@@ -21,32 +21,35 @@ export const ProductionSystem = ({
 
   const productionTypes = [
     {
-      type: 'single',
+      type: 'single' as const,
       name: 'Single',
       cost: 100000000,
       icon: Music,
       description: 'Produção rápida, menor custo, popularidade moderada'
     },
     {
-      type: 'album',
-      name: 'Álbum Completo',
-      cost: 500000000,
+      type: 'mini' as const,
+      name: 'Mini Album',
+      cost: 300000000,
       icon: Award,
-      description: 'Produção longa, alto custo, grande impacto na popularidade'
+      description: 'Produção média, custo moderado, bom impacto'
     },
     {
-      type: 'collab',
-      name: 'Colaboração',
-      cost: 200000000,
+      type: 'full' as const,
+      name: 'Full Album',
+      cost: 700000000,
       icon: Globe,
-      description: 'Colaboração com outros artistas, custo médio'
+      description: 'Produção completa, alto custo, grande impacto na popularidade'
     }
   ];
 
-  const handleProduction = (type: string) => {
+  const handleProduction = (type: 'single' | 'mini' | 'full') => {
     if (selectedGroup) {
-      onProduceContent(type, selectedGroup);
-      setSelectedGroup(null);
+      const productionType = productionTypes.find(p => p.type === type);
+      if (productionType) {
+        onProduceContent(selectedGroup, type, productionType.cost);
+        setSelectedGroup(null);
+      }
     }
   };
 

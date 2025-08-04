@@ -23,6 +23,8 @@ import { useGameState } from "@/hooks/useGameState";
 import { TraineeManagement } from "@/components/TraineeManagement";
 import { ProductionSystem } from "@/components/ProductionSystem";
 import { EventsSystem } from "@/components/EventsSystem";
+import { AuditionSystem } from "@/components/AuditionSystem";
+import { GroupManagement } from "@/components/GroupManagement";
 
 export const Dashboard = () => {
   const [newTraineeName, setNewTraineeName] = useState("");
@@ -31,20 +33,24 @@ export const Dashboard = () => {
     companyMoney,
     trainees,
     groups,
+    artists,
+    labels,
+    auditioning,
     formatMoney,
-    trainTrainee,
-    restTrainee,
-    recruitTrainee,
-    produceContent,
-    handleEvent
+    spendMoney,
+    handleAudition,
+    handleTrainArtist,
+    handleCreateGroup,
+    handleProduceComeback,
+    handleEvent,
+    getDebutReadyTrainees
   } = useGameState();
 
   const handleRecruitment = () => {
     if (newTraineeName.trim()) {
-      const success = recruitTrainee(newTraineeName);
-      if (success) {
-        setNewTraineeName("");
-      }
+      // Usar sistema de audição customizada em vez de recrutamento direto
+      handleAudition(50000000);
+      setNewTraineeName("");
     }
   };
 
@@ -158,10 +164,11 @@ export const Dashboard = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-card/90 border-border grid grid-cols-3 md:grid-cols-6 w-full">
+        <TabsList className="bg-card/90 border-border grid grid-cols-3 md:grid-cols-7 w-full">
           <TabsTrigger value="overview" className="text-xs md:text-sm">Visão Geral</TabsTrigger>
+          <TabsTrigger value="auditions" className="text-xs md:text-sm">Audições</TabsTrigger>
           <TabsTrigger value="artists" className="text-xs md:text-sm">Artistas</TabsTrigger>
-          <TabsTrigger value="trainees" className="text-xs md:text-sm">Trainees</TabsTrigger>
+          <TabsTrigger value="groups" className="text-xs md:text-sm">Grupos</TabsTrigger>
           <TabsTrigger value="production" className="text-xs md:text-sm">Produção</TabsTrigger>
           <TabsTrigger value="events" className="text-xs md:text-sm">Eventos</TabsTrigger>
           <TabsTrigger value="finances" className="text-xs md:text-sm">Finanças</TabsTrigger>
@@ -181,7 +188,7 @@ export const Dashboard = () => {
                       </div>
                       <div>
                         <h4 className="font-semibold text-foreground">{group.name}</h4>
-                        <p className="text-sm text-muted-foreground">{group.type} • {group.members} membros</p>
+                        <p className="text-sm text-muted-foreground">{group.type} • {group.members?.length || 0} membros</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Star className="w-3 h-3 text-yellow-500" />
                           <span className="text-xs text-muted-foreground">Popularidade: {group.popularity}%</span>
@@ -232,11 +239,32 @@ export const Dashboard = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="trainees" className="space-y-6">
+        <TabsContent value="auditions" className="space-y-6">
+          <AuditionSystem 
+            companyMoney={companyMoney}
+            auditioning={auditioning}
+            onHoldAudition={handleAudition}
+            onSpendMoney={spendMoney}
+          />
+        </TabsContent>
+
+        <TabsContent value="artists" className="space-y-6">
           <TraineeManagement 
             trainees={trainees}
-            onTrainSkill={trainTrainee}
-            onRestTrainee={restTrainee}
+            onTrainSkill={handleTrainArtist}
+            onRestTrainee={(id) => {}} // Implementar se necessário
+          />
+        </TabsContent>
+
+        <TabsContent value="groups" className="space-y-6">
+          <GroupManagement 
+            groups={groups}
+            debutReadyTrainees={getDebutReadyTrainees()}
+            companyMoney={companyMoney}
+            onCreateGroup={handleCreateGroup}
+            onProduceComeback={handleProduceComeback}
+            onSpendMoney={spendMoney}
+            formatMoney={formatMoney}
           />
         </TabsContent>
 
@@ -286,7 +314,7 @@ export const Dashboard = () => {
           <ProductionSystem 
             groups={groups}
             formatMoney={formatMoney}
-            onProduceContent={produceContent}
+            onProduceContent={handleProduceComeback}
           />
         </TabsContent>
 
